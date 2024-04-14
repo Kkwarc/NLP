@@ -3,6 +3,7 @@ import torch
 
 
 text = "Science is organized knowledge. Wisdom is organized life."
+text = "The first and the best victory is to conquer self?"
 
 
 bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
@@ -13,14 +14,10 @@ electra_tokenizer = ElectraTokenizer.from_pretrained('google/electra-small-discr
 
 
 bert_encoded_text = bert_tokenizer.encode(text, return_tensors='pt')
-gpt2_encoded_text = gpt2_tokenizer.encode(text, return_tensors='pt')
 distilbert_encoded_text = distilbert_tokenizer.encode(text, return_tensors='pt')
-xlnet_encoded_text = xlnet_tokenizer.encode(text, return_tensors='pt')
 electra_encoded_text = electra_tokenizer.encode(text, return_tensors='pt')
 
 
 print("BERT Encoded Text: ", bert_encoded_text)
-print("GPT-2 Encoded Text: ", gpt2_encoded_text)
 print("DistilBERT Encoded Text: ", distilbert_encoded_text)
-print("XLNet Encoded Text: ", xlnet_encoded_text)
 print("ELECTRA Encoded Text: ", electra_encoded_text)
