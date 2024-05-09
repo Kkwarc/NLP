@@ -13,7 +13,7 @@ mapping = {
     "Spinoza": "spinoza"
 }
 
-quote_dictionary = "quotes/"
+quote_dictionary = "data_sets/quotes/"
 
 df = None
 for name in mapping.keys():
@@ -21,9 +21,10 @@ for name in mapping.keys():
     with open(file_name, "r") as file:
         data = file.read()
         data = data.split("\n")
-        data = [quote[1:] if quote.startswith(" ") else quote for quote in data]
+        data = [quote[1:] if quote.startswith('"') else quote for quote in data]
+        data = [quote[:-1] if quote.endswith('"') else quote for quote in data]
         data = [quote if quote.endswith(".") else quote + "." for quote in data]
-        data = [[mapping[name], quote + "."] for quote in data]
+        data = [[mapping[name], quote] for quote in data]
         print(data)
         temp_df = pd.DataFrame(data, columns=["author", "quote"])
         df = pd.concat([df, temp_df], ignore_index=True) if df is not None else temp_df
@@ -31,4 +32,4 @@ df = df.sort_values("author")
 df = df.reset_index(drop=True)
 counts = df.groupby('author').size()
 print(counts)
-df.to_csv("data_set.csv")
+df.to_csv("data_set.csv", sep='@')

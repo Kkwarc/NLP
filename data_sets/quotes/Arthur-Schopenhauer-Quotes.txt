@@ -27,7 +27,7 @@ Happiness belongs to those who are sufficient unto themselves. For all external 
 Opinion is like a pendulum and obeys the same law.
 He who does not enjoy solitude will not love freedom.
 I know of no more beautiful prayer than that which the Hindus of old used in closing: May all that have life be delivered from suffering.
-A happy life is impos­si­ble; the best that a man can attain is a heroic life.
+A happy life is imposï¿½siï¿½ble; the best that a man can attain is a heroic life.
 It is difficult to keep quiet if you have nothing to do
 If you feel irritated by the absurd remarks of two people whose conversation you happen to overhear, you should imagine that you are listening to a dialogue of two fools in a comedy.
 Do not shorten the morning by getting up late, or waste it in unworthy occupations or in talk; look upon it as the quintessence of life, as to a certain extent sacred. Evening is like old age: we are languid, talkative, silly. Each day is a little life: every waking and rising a little birth, every fresh morning a little youth, every going to rest and sleep a little death.
@@ -100,7 +100,7 @@ Hatred is an affair of the heart; contempt that of the head.
 Suicide may also be regarded as an experiment - a question which man puts to Nature, trying to force her to answer. The question is this: What change will death produce in a man's existence and in his insight into the nature of things? It is a clumsy experiment to make; for it involves the destruction of the very consciousness which puts the question and awaits the answer.
 It is a clear gain to sacrifice pleasure in order to avoid pain.
 One should use common words to say uncommon things
-To be alone is the fate of all great minds—a fate deplored at times, but still always chosen as the less grievous of two evils.
+To be alone is the fate of all great mindsï¿½a fate deplored at times, but still always chosen as the less grievous of two evils.
 Life is a constant process of dying.
 Intellect is invisible to the man who has none.
 The world is not a factory and animals are not products for our use
@@ -185,7 +185,7 @@ Whoever wants his judgment to be believed, should express it coolly and dispassi
 Our moral virtues benefit mainly other people; intellectual virtues, on the other hand, benefit primarily ourselves; therefore the former make us universally popular, the latter unpopular.
 Imagination is strong in a man when that particular function of the brain which enables him to observe is roused to activity without any necessary excitement of the sense. Accordingly, we find that imagination is active just in proportion as our sense are not excited by external objects. A long period of solitude, whether in prison or in a sick room; quiet, twilight, darkness-these are the things that promote its activity; and under their influence it comes into play of itself.
 The first forty years of life give us the text; the next thirty supply the commentary on it.
-To attain something desired is to discover how vain it is; and…though we live all our lives in expectation of better things, we often at the same time long regretfully for what is past. The present, on the other hand, is regarded as something quite temporary and serving only as the road to our goal. That is why most men discover when they look back on their life that they have the whole time been living ad interim, and are surprised to see that which they let go by so unregarded and unenjoyed was precisely their life, was precisely in expectation of which they lived.
+To attain something desired is to discover how vain it is; andï¿½though we live all our lives in expectation of better things, we often at the same time long regretfully for what is past. The present, on the other hand, is regarded as something quite temporary and serving only as the road to our goal. That is why most men discover when they look back on their life that they have the whole time been living ad interim, and are surprised to see that which they let go by so unregarded and unenjoyed was precisely their life, was precisely in expectation of which they lived.
 The fourfold root of the principle of sufficent reason is "Anything perceived has a cause. All conclusions have premises. All effects have causes. All actions have motives.
 (Politeness is) a tacit agreement that people's miserable defects, whether moral or intellectual, shall on either side be ignored and not be made the subject of reproach.
 Human existence is an error...it is bad today and every day it gets worse, until the worst happens.
@@ -263,7 +263,7 @@ Honor means that a man is not exceptional; fame, that he is. Fame is something w
 For an act to be moral the intention must be based on compassion, not duty. We do something because we want to do it, because we feel we have to do it, not because we ought to do it. And even if our efforts fail - or we never even get to implement them - we are still moral because our motivation was based on compassion.
 Because people have no thoughts to deal in, they deal cards, and try and win one another's money. Idiots!
 In the sphere of thought, absurdity and perversity remain the masters of the world, and their dominion is suspended only for brief periods.
-Pride is an established conviction of one’s own paramount worth in some particular respect, while vanity is the desire of rousing such a conviction in others, and it is generally accompanied by the secret hope of ultimately coming to the same conviction oneself. Pride works from within; it is the direct appreciation of oneself. Vanity is the desire to arrive at this appreciation indirectly, from without.
+Pride is an established conviction of oneï¿½s own paramount worth in some particular respect, while vanity is the desire of rousing such a conviction in others, and it is generally accompanied by the secret hope of ultimately coming to the same conviction oneself. Pride works from within; it is the direct appreciation of oneself. Vanity is the desire to arrive at this appreciation indirectly, from without.
 There is no more mistaken path to happiness than worldliness, revelry, high life.
 If, while hurrying ostensibly to the temple of truth, we hand the reins over to our personal interests which look aside at very different guiding stars, for instance at the tastes and foibles of our contemporaries, at the established religion, but in particular at the hints and suggestions of those at the head of affairs, then how shall we ever reach the high, precipitous, bare rock whereon stands the temple of truth?
 Friends and acquaintances are the surest passport to fortune.
@@ -274,7 +274,7 @@ Solitude will be welcomed or endured or avoided, according as a man's personal v
 I believe that when death closes our eyes we shall awaken to a light, of which our sunlight is but the shadow.
 Every nation criticizes every other one - and they are all correct.
 True brevity of expression consists in a man only saying what is worth saying, while avoiding all diffuse explanations of things which every one can think out for himself.
-If life — the craving for which is the very essence of our being — were possessed of any positive intrinsic value, there would be no such thing as boredom at all: mere existence would satisfy us in itself, and we should want for nothing.
+If life ï¿½ the craving for which is the very essence of our being ï¿½ were possessed of any positive intrinsic value, there would be no such thing as boredom at all: mere existence would satisfy us in itself, and we should want for nothing.
 What makes people hard-hearted is this, that each man has, or fancies he has, as much as he can bear in his own troubles.
 A good supply of resignation is of the first importance in providing for the journey of life.
 Console yourself by remembering that the world doesn't deserve your affection.
@@ -309,10 +309,10 @@ He who can see truly in the midst of general infatuation is like a man whose wat
 He who lives to see two or three generations is like a man who sits some time in the conjurer's booth at a fair, and witnesses the performance twice or thrice in succession. The tricks were meant to be seen only once; and when they are no longer a novelty and cease to deceive, their effect is gone.
 With people of limited ability modesty is merely honesty. But with those who possess great talent it is hypocrisy.
 To call the world God is not to explain it; it is only to enrich our language with a superfluous synonym.
-If two men who were friends in their youth meet again when they are old, after being separated for a life-time, the chief feeling they will have at the sight of each other will be one of complete disappointment at life as a whole; because their thoughts will be carried back to that earlier time when life seemed so fair as it lay spread out before them in the rosy light of dawn, promised so much — and then performed so little.
+If two men who were friends in their youth meet again when they are old, after being separated for a life-time, the chief feeling they will have at the sight of each other will be one of complete disappointment at life as a whole; because their thoughts will be carried back to that earlier time when life seemed so fair as it lay spread out before them in the rosy light of dawn, promised so much ï¿½ and then performed so little.
 Every possession and every happiness is but lent by chance for an uncertain time, and may therefore be demanded back the next hour.
 The brain may be regarded as a kind of parasite of the organism, a pensioner, as it were, who dwells with the body.
-The inexpressible depth of music, so easy to understand and yet so inexplicable, is due to the fact that it reproduces all the emotions of our innermost being, but entirely without reality and remote from its pain… Music expresses only the quintessence of life and its events, never these themselves.
+The inexpressible depth of music, so easy to understand and yet so inexplicable, is due to the fact that it reproduces all the emotions of our innermost being, but entirely without reality and remote from its painï¿½ Music expresses only the quintessence of life and its events, never these themselves.
 A man of correct insight among those who are duped and deluded resembles one whose watch is right while all the clocks in the town give the wrong time.
 For whence did Dante take the materials for his hell but from this our actual world? And yet he made a very proper hell of it.
 Authors may be divided into falling stars, planets, and fixed stars: the first have a momentary effect; the second have a much longer duration; but the third are unchangeable, possess their own light, and work for all time.
@@ -378,7 +378,7 @@ There is no absurdity so palpable but that it may be firmly planted in the human
 Vedas are the most rewarding and the most elevating book which can be possible in the world.
 It is only a man's own fundamental thoughts that have truth and life in them.
 It is only the man whose intellect is clouded by his sexual impulse that could give the name of the fair sex to that undersized, narrow-shouldered, broad-hipped, and short-legged race.
-Truth that is naked is the most beautiful, and the simpler its expression the deeper is the impression it makes; this is partly because it gets unobstructed hold of the hearer’s mind without his being distracted by secondary thoughts, and partly because he feels that here he is not being corrupted or deceived by the arts of rhetoric, but that the whole effect is got from the thing itself.
+Truth that is naked is the most beautiful, and the simpler its expression the deeper is the impression it makes; this is partly because it gets unobstructed hold of the hearerï¿½s mind without his being distracted by secondary thoughts, and partly because he feels that here he is not being corrupted or deceived by the arts of rhetoric, but that the whole effect is got from the thing itself.
 Thus also every keen pleasure is an error and an illusion, for no attained wish can give lasting satisfaction.
 Every man takes the limits of his own field of vision for the limits of the world. This is an error of the intellect as inevitable as that error of the eye which lets you fancy that on the horizon heaven and earth meet.
 If people insist that honor is dearer than life itself, what they really mean is that existence and well-being are as nothing compared with other people's opinions. Of course, this may be only an exaggerated way of stating the prosaic truth that reputation, that is, the opinion others have of us, is indispensable if we are to make any progress in the world.
@@ -398,7 +398,7 @@ As the biggest library if it is in disorder is not as useful as a small but well
 Memory works like the collection glass in the Camera obscura: it gathers everything together and therewith produces a far more beautiful picture than was present originally.
 Honour is external conscience, and conscience is inward honour.
 There is a wide difference between the original thinker and the merely learned man.
-Alle Befriedigung, oder was man gemeinhin Glu« ck nennt, ist eigentlich und wesentlich immer nur negativ und durchaus nie positiv. All satisfaction, or what iscommonlycalled happiness, is really and essentially always negative only, and never positive.
+Alle Befriedigung, oder was man gemeinhin Gluï¿½ ck nennt, ist eigentlich und wesentlich immer nur negativ und durchaus nie positiv. All satisfaction, or what iscommonlycalled happiness, is really and essentially always negative only, and never positive.
 It is difficult, if not impossible, to define the limit of our reasonable desires in respect of possessions.
 Every state of welfare, every feeling of satisfaction, is negative in its character; that is to say, it consists in freedom from pain, which is the positive element of existence.
 The greatest intellectual capacities are only found in connection with a vehement and passionate will.
