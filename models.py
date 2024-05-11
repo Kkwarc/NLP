@@ -16,9 +16,6 @@ class CNN_Clasificator(nn.Module):
         self.linear1 = nn.Linear(30*50, 200, dtype=torch.double)
         self.linear2 = nn.Linear(200, 9, dtype=torch.double)
 
-    def prep(self, batch_size, first_u, first_y):
-        pass
-
     def forward(self, x):
         x = self.pool1(F.relu(self.conv1(x)))
         x = self.pool2(F.relu(self.conv2(x)))

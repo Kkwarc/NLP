@@ -22,7 +22,8 @@ mapping = {
 def pad_collate_fn(batch, pad_value=0):
     xx, yy = zip(*batch)
     xx_pad = pad_sequence(xx, batch_first=True, padding_value=pad_value)
-    return torch.tensor(xx_pad, dtype=torch.double), torch.tensor(yy)
+    x_lens = [len(x) for x in xx]
+    return torch.tensor(xx_pad, dtype=torch.double), torch.tensor(yy), x_lens
 
 class sentence_dataset(torch.utils.data.Dataset):
     def __init__(self, sentence, target):
