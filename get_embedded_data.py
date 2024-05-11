@@ -1,4 +1,3 @@
-import nltk
 from nltk.tokenize import word_tokenize
 from gensim.models import Word2Vec
 import numpy as np
@@ -23,7 +22,7 @@ mapping = {
 def pad_collate_fn(batch, pad_value=0):
     xx, yy = zip(*batch)
     xx_pad = pad_sequence(xx, batch_first=True, padding_value=pad_value)
-    return xx_pad, yy
+    return torch.tensor(xx_pad, dtype=torch.double), torch.tensor(yy)
 
 class sentence_dataset(torch.utils.data.Dataset):
     def __init__(self, sentence, target):
@@ -62,7 +61,7 @@ def get_data_word2vec_CNN(batch):
                 emb_sentence = np.hstack((emb_sentence, np.reshape(model.wv[sentence[i]], (100, 1))))
             else:
                 emb_sentence = np.hstack((emb_sentence, np.zeros((100,1))))
-        word2vec_embeddings.append(torch.from_numpy(emb_sentence).T)
+        word2vec_embeddings.append(torch.from_numpy(emb_sentence))
     dataset = sentence_dataset(word2vec_embeddings, list_of_targets)
     dataloader = DataLoader(dataset, batch, shuffle=True, drop_last=True)
     return dataloader
@@ -86,13 +85,13 @@ def get_data_glove_CNN(batch):
     glove = torchtext.vocab.GloVe(name="6B", dim=100)   
     glove_embeddings = []
     for sentence in list_of_words:
-        emb_sentence = np.empty((100,0))
+        emb_sentence = torch.empty((100,0),dtype=torch.double)
         for i in range(max_len_of_sentence):
             if i < len(sentence):
                 emb_sentence = torch.hstack((emb_sentence, torch.reshape(glove[sentence[i]], (100, 1))))
             else:
                 emb_sentence = torch.hstack((emb_sentence, torch.zeros((100,1))))
-        glove_embeddings.append(torch.from_numpy(emb_sentence).T)
+        glove_embeddings.append(emb_sentence)
     dataset = sentence_dataset(glove_embeddings, list_of_targets)
     dataloader = DataLoader(dataset, batch, shuffle=True, drop_last=True)
     return dataloader
