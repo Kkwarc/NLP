@@ -135,13 +135,17 @@ def get_data_BERT_MLP(batch, device):
     max_len_of_sentence = 125
     list_of_words, list_of_targets = get_sentences_transformers()
     bert_embeddings = []
-    for sentence in list_of_words[0:100]:
+    for sentence in list_of_words:
         encoded_input = bert_tokenizer(sentence, return_tensors='pt', add_special_tokens=False, pad_to_max_length=True,
                                        max_length=max_len_of_sentence)
         encoded_input = encoded_input.to(device)
-        output = bert_model(**encoded_input)
+        with torch.no_grad():
+            output = bert_model(**encoded_input)
         text_embedding = output.pooler_output[0]
+        encoded_input = 0
         bert_embeddings.append(text_embedding)
+        text_embedding = 0
+
 
     dataset = sentence_dataset(bert_embeddings, list_of_targets)
     dataloader = DataLoader(dataset, batch_size=batch, shuffle=True, drop_last=True)
