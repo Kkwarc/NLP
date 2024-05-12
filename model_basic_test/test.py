@@ -16,9 +16,10 @@ text = "The Life of the intellect is the best and pleasantest for man, because t
 
 # encoded_input = bert_tokenizer(text)
 # print(encoded_input)
-encoded_input = bert_tokenizer(text, return_tensors='pt', add_special_tokens=False)
+encoded_input = bert_tokenizer(text, return_tensors='pt', add_special_tokens=False, pad_to_max_length=False, max_length=125)
 output = bert_model(**encoded_input)
 text_embedding = output.last_hidden_state[0]
+text_embedding = output.pooler_output[0]
 print(output)
 print(text_embedding)
 # print(middle_tensor)

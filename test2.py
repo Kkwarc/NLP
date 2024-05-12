@@ -89,12 +89,12 @@ def train_model(model, criterion, optimizer, scheduler, train_loader, test_loade
 X_train, X_test, y_train, y_test = train_test_split(df["quote"], df["label"], test_size=0.2, random_state=42)
 
 X_train_tokens_attention = tokenize_data(X_train)
-X_train_tokens = X_train_tokens_attention['input_ids']
-X_train_attention = X_train_tokens_attention['attention_mask']
+# X_train_tokens = X_train_tokens_attention['input_ids']
+# X_train_attention = X_train_tokens_attention['attention_mask']
 
 X_test_tokens_attention = tokenize_data(X_test)
-X_test_tokens = X_test_tokens_attention['input_ids']
-X_test_attention = X_test_tokens_attention['attention_mask']
+# X_test_tokens = X_test_tokens_attention['input_ids']
+# X_test_attention = X_test_tokens_attention['attention_mask']
 
 
 y_train = torch.tensor(y_train.values, dtype=torch.long)

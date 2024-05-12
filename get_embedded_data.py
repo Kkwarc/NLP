@@ -7,6 +7,8 @@ import torchtext
 import torchtext.vocab
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
+from transformers import BertModel, ElectraModel, RobertaModel
+from transformers import BertTokenizer, ElectraTokenizer, RobertaTokenizer
 
 mapping = {
     "aristotle" : 0,
@@ -84,7 +86,7 @@ def get_data_word2vec_LSTM(batch):
 def get_data_glove_CNN(batch):
     max_len_of_sentence = 125
     list_of_words, list_of_targets = get_sentences()
-    glove = torchtext.vocab.GloVe(name="6B", dim=100)   
+    glove = torchtext.vocab.GloVe(name="6B", dim=100)
     glove_embeddings = []
     for sentence in list_of_words:
         emb_sentence = torch.empty((100,0),dtype=torch.double)
@@ -114,25 +116,18 @@ def get_data_glove_LSTM(batch):
 
 
 def get_data_BERT_MLP(batch):
+    bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    bert_model = BertModel.from_pretrained('bert-base-uncased')
     max_len_of_sentence = 125
     list_of_words, list_of_targets = get_sentences()
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     bert_embeddings = []
     for sentence in list_of_words:
-        emb_sentence = torch.empty((100, 0), dtype=torch.double)
-        for i in range(max_len_of_sentence):
-            if i < len(sentence):
-                x = tokenizer(sentence[i], truncation=True, return_tensors='pt')['input_ids']
-                print(sentence[i], x)
-                # emb_sentence = torch.hstack((emb_sentence, torch.reshape(x, (100, 1))))
-            else:
-                emb_sentence = torch.hstack((emb_sentence, torch.zeros((100, 1))))
-        x = tokenizer.batch_encode_plus(sentence, add_special_tokens=True, return_attention_mask=True, pad_to_max_length=True, max_length=128, return_tensors='pt')['input_ids']
-        print(sentence, x)
-        bert_embeddings.append(emb_sentence)
-    # for sentence in list_of_words:
-    #     tokens = tokenizer(sentence, padding='max_length', truncation=True, max_length=max_len_of_sentence, return_tensors='pt')['input_ids']
-    #     bert_embeddings.append(tokens)
+        encoded_input = bert_tokenizer(sentence, return_tensors='pt', add_special_tokens=False, pad_to_max_length=True,
+                                       max_length=max_len_of_sentence)
+        output = bert_model(**encoded_input)
+        text_embedding = output.last_hidden_state[0]
+        text_embedding = output.pooler_output[0]
+        bert_embeddings.append(text_embedding)
 
     dataset = sentence_dataset(bert_embeddings, list_of_targets)
     dataloader = DataLoader(dataset, batch_size=batch, shuffle=True, drop_last=True)
