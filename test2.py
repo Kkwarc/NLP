@@ -1,7 +1,7 @@
 import torch
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from transformers import BertTokenizer
+from transformers import BertTokenizer, BertModel
 from torch.utils.data import DataLoader, TensorDataset
 import torch.nn as nn
 import torch.optim as optim
@@ -25,10 +25,20 @@ def transform_labels(row):
 
 df = pd.read_csv("data_set.csv", sep="@")
 df["label"] = df["author"].apply(transform_labels)
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
+# tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
+
+
+bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
+bert_model = BertModel.from_pretrained('bert-base-uncased')
+
 
 def tokenize_data(data):
-    return tokenizer.batch_encode_plus(data, add_special_tokens=True, return_attention_mask=True, pad_to_max_length=True, max_length=128, return_tensors='pt')
+    # token = bert_tokenizer.batch_encode_plus(data, add_special_tokens=True, return_attention_mask=True, pad_to_max_length=True, max_length=128, return_tensors='pt')
+    encoded_input = bert_tokenizer(data.to_list(), return_tensors='pt', add_special_tokens=False, pad_to_max_length=True, max_length=10)
+    output = bert_model(**encoded_input)
+    text_embedding = output.last_hidden_state[0]
+    middle_tensor = text_embedding[1]
+    return middle_tensor
 
 
 class MLP(nn.Module):
@@ -101,10 +111,10 @@ hidden_dim2 = 256
 output_dim = 9
 model = MLP(input_dim, hidden_dim1, hidden_dim2, output_dim)
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=1e-5)
+optimizer = optim.Adam(model.parameters(), lr=1e-6)
 scheduler = ReduceLROnPlateau(optimizer, mode='min', patience=5, factor=0.1, verbose=True)
 
-train_model(model, criterion, optimizer, scheduler, train_loader, test_loader, num_epochs=250)
+train_model(model, criterion, optimizer, scheduler, train_loader, test_loader, num_epochs=50)
 
 model.eval()
 with torch.no_grad():

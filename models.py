@@ -24,6 +24,22 @@ class CNN_Clasificator(nn.Module):
         x = self.linear2(x)
         return x
 
+
+class MLP(nn.Module):
+    def __init__(self, input_dim, hidden_dim1, hidden_dim2, output_dim):
+        super(MLP, self).__init__()
+        self.fc1 = nn.Linear(input_dim, hidden_dim1)
+        self.fc2 = nn.Linear(hidden_dim1, hidden_dim2)
+        self.fc3 = nn.Linear(hidden_dim2, output_dim)
+        self.relu = nn.ReLU()
+
+    def forward(self, inputs):
+        x = self.relu(self.fc1(x))
+        x = self.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+
 class LSTM__Clasificator(nn.Module):
     def __init__(self, hidden_size):
         super().__init__()

@@ -1,5 +1,6 @@
 from nltk.tokenize import word_tokenize
 from gensim.models import Word2Vec
+from transformers import BertTokenizer
 import numpy as np
 import torch
 import torchtext
@@ -89,6 +90,7 @@ def get_data_glove_CNN(batch):
         emb_sentence = torch.empty((100,0),dtype=torch.double)
         for i in range(max_len_of_sentence):
             if i < len(sentence):
+                x = glove[sentence[i]]
                 emb_sentence = torch.hstack((emb_sentence, torch.reshape(glove[sentence[i]], (100, 1))))
             else:
                 emb_sentence = torch.hstack((emb_sentence, torch.zeros((100,1))))
@@ -108,4 +110,30 @@ def get_data_glove_LSTM(batch):
         glove_embeddings.append(emb_sentence.T)
     dataset = sentence_dataset(glove_embeddings, list_of_targets)
     dataloader = DataLoader(dataset, batch, shuffle=True, drop_last=True, collate_fn=pad_collate_fn)
+    return dataloader
+
+
+def get_data_BERT_MLP(batch):
+    max_len_of_sentence = 125
+    list_of_words, list_of_targets = get_sentences()
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    bert_embeddings = []
+    for sentence in list_of_words:
+        emb_sentence = torch.empty((100, 0), dtype=torch.double)
+        for i in range(max_len_of_sentence):
+            if i < len(sentence):
+                x = tokenizer(sentence[i], truncation=True, return_tensors='pt')['input_ids']
+                print(sentence[i], x)
+                # emb_sentence = torch.hstack((emb_sentence, torch.reshape(x, (100, 1))))
+            else:
+                emb_sentence = torch.hstack((emb_sentence, torch.zeros((100, 1))))
+        x = tokenizer.batch_encode_plus(sentence, add_special_tokens=True, return_attention_mask=True, pad_to_max_length=True, max_length=128, return_tensors='pt')['input_ids']
+        print(sentence, x)
+        bert_embeddings.append(emb_sentence)
+    # for sentence in list_of_words:
+    #     tokens = tokenizer(sentence, padding='max_length', truncation=True, max_length=max_len_of_sentence, return_tensors='pt')['input_ids']
+    #     bert_embeddings.append(tokens)
+
+    dataset = sentence_dataset(bert_embeddings, list_of_targets)
+    dataloader = DataLoader(dataset, batch_size=batch, shuffle=True, drop_last=True)
     return dataloader

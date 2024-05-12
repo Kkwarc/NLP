@@ -101,9 +101,9 @@ def predict(text, model, tokenizer, device, max_length=128):
 bert_model_name = 'bert-base-uncased'
 num_classes = 9
 max_length = 128
-batch_size = 32
+batch_size = 200
 num_epochs = 50
-learning_rate = 2e-5
+learning_rate = 1e-5
 
 train_texts, val_texts, train_labels, val_labels = train_test_split(texts, labels, test_size=0.2, random_state=42)
 
