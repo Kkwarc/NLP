@@ -142,9 +142,7 @@ def get_data_BERT_MLP(batch, device):
         with torch.no_grad():
             output = bert_model(**encoded_input)
         text_embedding = output.pooler_output[0]
-        encoded_input = 0
         bert_embeddings.append(text_embedding)
-        text_embedding = 0
 
 
     dataset = sentence_dataset(bert_embeddings, list_of_targets)
