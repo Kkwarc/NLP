@@ -115,17 +115,17 @@ def get_data_glove_LSTM(batch):
     return dataloader
 
 
-def get_data_BERT_MLP(batch):
+def get_data_BERT_MLP(batch, device):
     bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    bert_model = BertModel.from_pretrained('bert-base-uncased')
+    bert_model = BertModel.from_pretrained('bert-base-uncased').to(device)
     max_len_of_sentence = 125
     list_of_words, list_of_targets = get_sentences()
     bert_embeddings = []
     for sentence in list_of_words:
         encoded_input = bert_tokenizer(sentence, return_tensors='pt', add_special_tokens=False, pad_to_max_length=True,
                                        max_length=max_len_of_sentence)
+        encoded_input = encoded_input.to(device)
         output = bert_model(**encoded_input)
-        text_embedding = output.last_hidden_state[0]
         text_embedding = output.pooler_output[0]
         bert_embeddings.append(text_embedding)
 
