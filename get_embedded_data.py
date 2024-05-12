@@ -39,6 +39,20 @@ class sentence_dataset(torch.utils.data.Dataset):
         in_data, target = self.data[idx]
         return in_data, target
 
+def get_sentences_transformers():
+    with open('data_set.csv', 'r', encoding='utf-8') as dh:
+        list_of_words = []
+        list_of_targets = []
+        for i, line in enumerate(dh):
+            if i > 0:
+                line = line.strip()
+                line = line.split('@')
+                list_of_words.append(line[-1].lower())
+                list_of_targets.append(mapping[line[1]])
+        dh.close()
+    return list_of_words, list_of_targets
+
+
 def get_sentences():
     with open('data_set.csv', 'r', encoding='utf-8') as dh:
         list_of_words = []
@@ -119,9 +133,9 @@ def get_data_BERT_MLP(batch, device):
     bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     bert_model = BertModel.from_pretrained('bert-base-uncased').to(device)
     max_len_of_sentence = 125
-    list_of_words, list_of_targets = get_sentences()
+    list_of_words, list_of_targets = get_sentences_transformers()
     bert_embeddings = []
-    for sentence in list_of_words:
+    for sentence in list_of_words[0:100]:
         encoded_input = bert_tokenizer(sentence, return_tensors='pt', add_special_tokens=False, pad_to_max_length=True,
                                        max_length=max_len_of_sentence)
         encoded_input = encoded_input.to(device)
