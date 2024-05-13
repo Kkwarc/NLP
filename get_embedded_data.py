@@ -141,7 +141,7 @@ def get_data_BERT_MLP(batch, device):
         encoded_input = encoded_input.to(device)
         with torch.no_grad():
             output = bert_model(**encoded_input)
-        text_embedding = output.pooler_output[0]
+        text_embedding = output.last_hidden_state[0]
         bert_embeddings.append(text_embedding)
 
 
