@@ -65,40 +65,40 @@ def split_data(df, labels_column_name, values_column_name, test_size=0.2, separa
     return X_train, X_test, y_train, y_test
 
 
-def get_sentences_transformers():
-    with open('data_set.csv', 'r', encoding='utf-8') as dh:
-        list_of_words = []
-        list_of_targets = []
-        for i, line in enumerate(dh):
-            if i > 0:
-                line = line.strip()
-                line = line.split('@')
-                list_of_words.append(line[-1].lower())
-                list_of_targets.append(MAPPING[line[1]])
-        dh.close()
-    return list_of_words, list_of_targets
+# def get_sentences_transformers():
+#     with open('data_set.csv', 'r', encoding='utf-8') as dh:
+#         list_of_words = []
+#         list_of_targets = []
+#         for i, line in enumerate(dh):
+#             if i > 0:
+#                 line = line.strip()
+#                 line = line.split('@')
+#                 list_of_words.append(line[-1].lower())
+#                 list_of_targets.append(MAPPING[line[1]])
+#         dh.close()
+#     return list_of_words, list_of_targets
 
 
-def get_sentences():
-    with open('data_set.csv', 'r', encoding='utf-8') as dh:
-        list_of_words = []
-        list_of_targets = []
-        for i, line in enumerate(dh):
-            if i > 0:
-                line = line.strip()
-                line = line.split('@')
-                line[-1] = word_tokenize(line[-1].lower())
-                list_of_words.append(line[-1])
-                list_of_targets.append(MAPPING[line[1]])
-        dh.close()
-    return list_of_words, list_of_targets
+# def get_sentences():
+#     with open('data_set.csv', 'r', encoding='utf-8') as dh:
+#         list_of_words = []
+#         list_of_targets = []
+#         for i, line in enumerate(dh):
+#             if i > 0:
+#                 line = line.strip()
+#                 line = line.split('@')
+#                 line[-1] = word_tokenize(line[-1].lower())
+#                 list_of_words.append(line[-1])
+#                 list_of_targets.append(MAPPING[line[1]])
+#         dh.close()
+#     return list_of_words, list_of_targets
 
-def get_data_word2vec_CNN(batch):
+
+def get_data_word2vec_CNN(batch, words:list, labels:list,):
     max_len_of_sentence = 125
-    list_of_words, list_of_targets = get_sentences()
     model = Word2Vec.load('word2vec/word2vec_100d')
     word2vec_embeddings = []
-    for sentence in list_of_words:
+    for sentence in words:
         emb_sentence = np.empty((100,0))
         for i in range(max_len_of_sentence):
             if i < len(sentence):
@@ -106,29 +106,29 @@ def get_data_word2vec_CNN(batch):
             else:
                 emb_sentence = np.hstack((emb_sentence, np.zeros((100,1))))
         word2vec_embeddings.append(torch.from_numpy(emb_sentence))
-    dataset = sentence_dataset(word2vec_embeddings, list_of_targets)
+    dataset = sentence_dataset(word2vec_embeddings, labels)
     dataloader = DataLoader(dataset, batch, shuffle=True, drop_last=True)
     return dataloader
 
-def get_data_word2vec_LSTM(batch):
-    list_of_words, list_of_targets = get_sentences()
+
+def get_data_word2vec_LSTM(batch, words:list, labels:list,):
     model = Word2Vec.load('word2vec/word2vec_100d')
     word2vec_embeddings = []
-    for sentence in list_of_words:
+    for sentence in words:
         emb_sentence = np.empty((100,0))
         for word in sentence:
             emb_sentence = np.hstack((emb_sentence, np.reshape(model.wv[word], (100, 1))))
         word2vec_embeddings.append(torch.from_numpy(emb_sentence).T)
-    dataset = sentence_dataset(word2vec_embeddings, list_of_targets)
+    dataset = sentence_dataset(word2vec_embeddings, labels)
     dataloader = DataLoader(dataset, batch, shuffle=True, drop_last=True, collate_fn=pad_collate_fn)
     return dataloader
 
-def get_data_glove_CNN(batch):
+
+def get_data_glove_CNN(batch, words:list, labels:list,):
     max_len_of_sentence = 125
-    list_of_words, list_of_targets = get_sentences()
     glove = torchtext.vocab.GloVe(name="6B", dim=100)
     glove_embeddings = []
-    for sentence in list_of_words:
+    for sentence in words:
         emb_sentence = torch.empty((100,0),dtype=torch.double)
         for i in range(max_len_of_sentence):
             if i < len(sentence):
@@ -136,20 +136,20 @@ def get_data_glove_CNN(batch):
             else:
                 emb_sentence = torch.hstack((emb_sentence, torch.zeros((100,1))))
         glove_embeddings.append(emb_sentence)
-    dataset = sentence_dataset(glove_embeddings, list_of_targets)
+    dataset = sentence_dataset(glove_embeddings, labels)
     dataloader = DataLoader(dataset, batch, shuffle=True, drop_last=True)
     return dataloader
 
-def get_data_glove_LSTM(batch):
-    list_of_words, list_of_targets = get_sentences()
+
+def get_data_glove_LSTM(batch, words:list, labels:list,):
     glove = torchtext.vocab.GloVe(name="6B", dim=100)
     glove_embeddings = []
-    for sentence in list_of_words:
+    for sentence in words:
         emb_sentence = torch.empty((100,0))
         for word in sentence:
             emb_sentence = torch.hstack((emb_sentence, torch.reshape(glove[word], (100, 1))))
         glove_embeddings.append(emb_sentence.T)
-    dataset = sentence_dataset(glove_embeddings, list_of_targets)
+    dataset = sentence_dataset(glove_embeddings, labels)
     dataloader = DataLoader(dataset, batch, shuffle=True, drop_last=True, collate_fn=pad_collate_fn)
     return dataloader
 
@@ -164,8 +164,7 @@ def get_data_tokenizer_MLP(batch, words:list, labels:list, device, tokenizer, mo
         encoded_input = encoded_input.to(device)
         with torch.no_grad():
             output = model(**encoded_input)
-        # text_embedding = output.last_hidden_state[0]
-        text_embedding = output.pooler_output[0]
+        text_embedding = output.last_hidden_state[0]
         bert_embeddings.append(text_embedding)
 
     shape = text_embedding.shape[1]
