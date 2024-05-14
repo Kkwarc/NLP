@@ -2,15 +2,16 @@ from nltk.tokenize import word_tokenize
 from gensim.models import Word2Vec
 from transformers import BertTokenizer
 import numpy as np
+import pandas as pd
 import torch
 import torchtext
 import torchtext.vocab
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
-from transformers import BertModel, ElectraModel, RobertaModel
-from transformers import BertTokenizer, ElectraTokenizer, RobertaTokenizer
+from sklearn.model_selection import train_test_split
 
-mapping = {
+
+MAPPING = {
     "aristotle" : 0,
     "schopenhauer": 1,
     "nietzsche": 2,
@@ -21,6 +22,7 @@ mapping = {
     "freud": 7,
     "spinoza": 8
 }
+
 
 def pad_collate_fn(batch, pad_value=0):
     xx, yy = zip(*batch)
@@ -39,6 +41,30 @@ class sentence_dataset(torch.utils.data.Dataset):
         in_data, target = self.data[idx]
         return in_data, target
 
+
+def split_data(df, labels_column_name, values_column_name, test_size=0.2, separator=None, mapping=None, labels_to_delete=[]):
+    def map_labels(value):
+        return mapping[value]
+    if type(df) == str:
+        df = pd.read_csv(df, sep=separator)
+    unique_labels = df[labels_column_name].unique()
+    print(unique_labels)
+    unique_labels_list = [df[df[labels_column_name] == label]  for label in unique_labels if label not in labels_to_delete]
+
+    X_train, X_test, y_train, y_test = [], [], [], []
+
+    for df in unique_labels_list:
+        if mapping is not None:
+            df["labels"] = df[labels_column_name].apply(map_labels)
+        temp_X_train, temp_X_test, temp_y_train, temp_y_test = train_test_split(df[values_column_name].to_list(), df["labels"].to_list(), test_size=test_size)
+        X_train += temp_X_train
+        X_test += temp_X_test
+        y_train += temp_y_train
+        y_test += temp_y_test
+
+    return X_train, X_test, y_train, y_test
+
+
 def get_sentences_transformers():
     with open('data_set.csv', 'r', encoding='utf-8') as dh:
         list_of_words = []
@@ -48,7 +74,7 @@ def get_sentences_transformers():
                 line = line.strip()
                 line = line.split('@')
                 list_of_words.append(line[-1].lower())
-                list_of_targets.append(mapping[line[1]])
+                list_of_targets.append(MAPPING[line[1]])
         dh.close()
     return list_of_words, list_of_targets
 
@@ -63,7 +89,7 @@ def get_sentences():
                 line = line.split('@')
                 line[-1] = word_tokenize(line[-1].lower())
                 list_of_words.append(line[-1])
-                list_of_targets.append(mapping[line[1]])
+                list_of_targets.append(MAPPING[line[1]])
         dh.close()
     return list_of_words, list_of_targets
 
@@ -106,7 +132,6 @@ def get_data_glove_CNN(batch):
         emb_sentence = torch.empty((100,0),dtype=torch.double)
         for i in range(max_len_of_sentence):
             if i < len(sentence):
-                x = glove[sentence[i]]
                 emb_sentence = torch.hstack((emb_sentence, torch.reshape(glove[sentence[i]], (100, 1))))
             else:
                 emb_sentence = torch.hstack((emb_sentence, torch.zeros((100,1))))
@@ -129,22 +154,21 @@ def get_data_glove_LSTM(batch):
     return dataloader
 
 
-def get_data_BERT_MLP(batch, device):
-    bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    bert_model = BertModel.from_pretrained('bert-base-uncased').to(device)
+def get_data_tokenizer_MLP(batch, words:list, labels:list, device, tokenizer, model):
+    model = model.to(device)
     max_len_of_sentence = 125
-    list_of_words, list_of_targets = get_sentences_transformers()
     bert_embeddings = []
-    for sentence in list_of_words:
-        encoded_input = bert_tokenizer(sentence, return_tensors='pt', add_special_tokens=False, pad_to_max_length=True,
+    for sentence in words:
+        encoded_input = tokenizer(sentence, return_tensors='pt', add_special_tokens=False, pad_to_max_length=True,
                                        max_length=max_len_of_sentence)
         encoded_input = encoded_input.to(device)
         with torch.no_grad():
-            output = bert_model(**encoded_input)
-        text_embedding = output.last_hidden_state[0]
+            output = model(**encoded_input)
+        # text_embedding = output.last_hidden_state[0]
+        text_embedding = output.pooler_output[0]
         bert_embeddings.append(text_embedding)
 
-
-    dataset = sentence_dataset(bert_embeddings, list_of_targets)
+    shape = text_embedding.shape[1]
+    dataset = sentence_dataset(bert_embeddings, labels)
     dataloader = DataLoader(dataset, batch_size=batch, shuffle=True, drop_last=True)
-    return dataloader
+    return dataloader, shape

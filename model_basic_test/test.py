@@ -10,8 +10,8 @@ bert_model = BertModel.from_pretrained('bert-base-uncased')
 # robert_tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
 # robert_model = RobertaModel.from_pretrained('roberta-base')
 #
-# electra_tokenizer = ElectraTokenizer.from_pretrained('google/electra-small-discriminator')
-# electra_model = ElectraModel.from_pretrained('google/electra-small-discriminator')
+electra_tokenizer = ElectraTokenizer.from_pretrained('google/electra-small-discriminator')
+electra_model = ElectraModel.from_pretrained('google/electra-small-discriminator')
 
 
 start = time.time()
@@ -19,10 +19,12 @@ text = "The Life of the intellect is the best and pleasantest for man, because t
 
 # encoded_input = bert_tokenizer(text)
 # print(encoded_input)
-encoded_input = bert_tokenizer(text, return_tensors='pt', add_special_tokens=False, pad_to_max_length=True, max_length=125)
-output = bert_model(**encoded_input)
-text_embedding = output.last_hidden_state[0]
+encoded_input = electra_tokenizer(text, return_tensors='pt', add_special_tokens=False, pad_to_max_length=True, max_length=125)
+output = electra_model(**encoded_input)
+# text_embedding = output.last_hidden_state[0]
+# print(text_embedding.shape[1])
 text_embedding = output.pooler_output[0]
+print(text_embedding.shape)
 print(output)
 print(text_embedding)
 print(time.time() - start)
