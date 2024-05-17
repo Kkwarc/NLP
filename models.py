@@ -6,11 +6,11 @@ class CNN_Clasificator(nn.Module):
     def __init__(self):
         super().__init__()
         #125
-        self.conv1 = nn.Conv1d(100, 150, 4, dtype=torch.double)
+        self.conv1 = nn.Conv1d(100, 70, 4, dtype=torch.double)
         #122
         self.pool1 = nn.MaxPool1d(2)
         #61
-        self.conv2 = nn.Conv1d(150, 50, 2, dtype=torch.double)
+        self.conv2 = nn.Conv1d(70, 50, 2, dtype=torch.double)
         #60
         self.pool2 = nn.MaxPool1d(2)
         self.linear1 = nn.Linear(30*50, 200, dtype=torch.double)
