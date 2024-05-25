@@ -51,14 +51,15 @@ def plot_overlap_matrix(files, overlaps):
         for j in range(num_files):
             ax.text(j, i, f'{overlap_matrix[i, j]:.2f}', va='center', ha='center', color='black')
 
-    plt.savefig("class_coverage_matrix.png")
+    plt.savefig("class_coverage_matrix.png", dpi=500)
     plt.show()
 
 
 if __name__ == "__main__":
-    text_files = os.listdir("data_sets/quotes")
+    path = "author_texts_and_word_clouds"
+    text_files = [file_name[:-4] for file_name in os.listdir(path) if file_name.endswith(".txt")]
 
-    texts = [read_text_file("data_sets/quotes/" + file_path) for file_path in text_files]
+    texts = [read_text_file(f"{path}/" + file_path + ".txt") for file_path in text_files]
 
     top_words_list = [get_top_words(text, 50) for text in texts]
 
