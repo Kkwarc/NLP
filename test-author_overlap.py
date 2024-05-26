@@ -30,6 +30,7 @@ def calculate_overlap(words1, words2, X):
 
     return presence_overlap
 
+
 def plot_overlap_matrix(files, overlaps):
     num_files = len(files)
     overlap_matrix = np.zeros((num_files, num_files))

@@ -30,6 +30,7 @@ def pad_collate_fn(batch, pad_value=0):
     x_lens = [len(x) for x in xx]
     return torch.tensor(xx_pad, dtype=torch.double), torch.tensor(yy), x_lens
 
+
 class sentence_dataset(torch.utils.data.Dataset):
     def __init__(self, sentence, target):
         self.data = list(zip(sentence,target))
