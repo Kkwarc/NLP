@@ -3,6 +3,11 @@ from transformers import BertTokenizer, ElectraTokenizer, RobertaTokenizer
 import torch
 import torch.nn.functional as F
 from get_embedded_data import MAPPING
+import torchtext
+import numpy as np
+import torchtext.vocab
+from gensim.models import Word2Vec
+from nltk.tokenize import word_tokenize
 
 
 CLASS_LABELS = MAPPING.keys()
@@ -20,6 +25,22 @@ MODELS_NAME_MAPPING = {
     "Electra_full_no_weights": ("Electra", "electra_[]_[].pt"),
     "Electra_balanced_weights": ("Electra", "electra_['spinoza', 'hegel', 'plato']_[1, 1, 2, 3, 1.33, 1.33, 5, 1, 2.5].pt"),
     "Electra_balanced_no_weights": ("Electra", "electra_['spinoza', 'hegel', 'plato']_[].pt"),
+    "CNN_glove_full_weights": ("CNN", "glove", "CNN_glove_[]_[1, 1, 2, 3, 1.33, 1.33, 5, 1, 2.5]"),
+    "CNN_glove_full_no_weights": ("CNN", "glove", "CNN_glove_[]_[]"),
+    "CNN_glove_balanced_weights": ("CNN", "glove", "CNN_glove_['spinoza', 'hegel', 'plato']_[]"),
+    "CNN_glove_balanced_no_weight": ("CNN", "glove", "CNN_glove_['spinoza', 'hegel', 'plato']_[1, 1, 2, 3, 1.33, 1.33, 5, 1, 2.5]"),
+    "CNN_word2vec_full_weights": ("CNN", "word2vec", "CNN_word2vec_[]_[1, 1, 2, 3, 1.33, 1.33, 5, 1, 2.5]"),
+    "CNN_word2vec_full_no_weights": ("CNN", "word2vec", "CNN_word2vec_[]_[]"),
+    "CNN_word2vec_balanced_weights": ("CNN", "word2vec", "CNN_word2vec_['spinoza', 'hegel', 'plato']_[]"),
+    "CNN_word2vec_balanced_no_weight": ("CNN", "word2vec", "CNN_word2vec_['spinoza', 'hegel', 'plato']_[1, 1, 2, 3, 1.33, 1.33, 5, 1, 2.5]"),
+    "LSTM_glove_full_weights": ("LSTM", "glove", "LSTM_glove_[]_[1, 1, 2, 3, 1.33, 1.33, 5, 1, 2.5]"),
+    "LSTM_glove_full_no_weights": ("LSTM", "glove", "LSTM_glove_[]_[]"),
+    "LSTM_glove_balanced_weights": ("LSTM", "glove", "LSTM_glove_['spinoza', 'hegel', 'plato']_[]"),
+    "LSTM_glove_balanced_no_weight": ("LSTM", "glove", "LSTM_glove_['spinoza', 'hegel', 'plato']_[1, 1, 2, 3, 1.33, 1.33, 5, 1, 2.5]"),
+    "LSTM_word2vec_full_weights": ("LSTM", "word2vec", "LSTM_word2vec_[]_[1, 1, 2, 3, 1.33, 1.33, 5, 1, 2.5]"),
+    "LSTM_word2vec_full_no_weights": ("LSTM", "word2vec", "LSTM_word2vec_[]_[]"),
+    "LSTM_word2vec_balanced_weights": ("LSTM", "word2vec", "LSTM_word2vec_['spinoza', 'hegel', 'plato']_[]"),
+    "LSTM_word2vec_balanced_no_weight": ("LSTM", "word2vec", "LSTM_word2vec_['spinoza', 'hegel', 'plato']_[1, 1, 2, 3, 1.33, 1.33, 5, 1, 2.5]"),
 }
 
 
@@ -60,6 +81,35 @@ def get_prediction_probabilities(outputs):
     probabilities = F.softmax(outputs, dim=0)
     return probabilities
 
+def prepare_glove(quote, model, max_len_of_sentence, device):
+    glove = torchtext.vocab.GloVe(name="6B", dim=100)
+    emb_sentence = torch.empty((100,0),dtype=torch.double)
+    if model == "LSTM":
+        for word in quote:
+            emb_sentence = torch.hstack((emb_sentence, torch.reshape(glove[word], (100, 1))))
+        return emb_sentence.T.unsqueeze(0).to(device)
+    else:
+        for i in range(max_len_of_sentence):
+            if i < len(quote):
+                emb_sentence = torch.hstack((emb_sentence, torch.reshape(glove[quote[i]], (100, 1))))
+            else:
+                emb_sentence = torch.hstack((emb_sentence, torch.zeros((100,1))))
+        return emb_sentence.unsqueeze(0).to(device)
+    
+def prepare_word2vec(quote, model, max_len_of_sentence, device):
+    tok = Word2Vec.load('word2vec/word2vec_100d')
+    emb_sentence = np.empty((100,0))
+    if model == "LSTM":
+        for word in quote:
+            emb_sentence = np.hstack((emb_sentence, np.reshape(tok.wv[word], (100, 1))))
+        return torch.from_numpy(emb_sentence).T.unsqueeze(0).to(device)
+    else:
+        for i in range(max_len_of_sentence):
+            if i < len(quote):
+                emb_sentence = np.hstack((emb_sentence, np.reshape(tok.wv[quote[i]], (100, 1))))
+            else:
+                emb_sentence = np.hstack((emb_sentence, np.zeros((100,1))))
+        return torch.from_numpy(emb_sentence).unsqueeze(0).to(device)
 
 """
 Models names:
@@ -75,19 +125,50 @@ Electra_full_weights
 Electra_full_no_weights
 Electra_balanced_weights
 Electra_balanced_no_weights
+CNN_glove_full_weights
+CNN_glove_full_no_weights
+CNN_glove_balanced_weights
+CNN_glove_balanced_no_weight
+CNN_word2vec_full_weights
+CNN_word2vec_full_no_weights
+CNN_word2vec_balanced_weights
+CNN_word2vec_balanced_no_weight
+LSTM_glove_full_weights
+LSTM_glove_full_no_weights
+LSTM_glove_balanced_weights
+LSTM_glove_balanced_no_weight
+LSTM_word2vec_full_weights
+LSTM_word2vec_full_no_weights
+LSTM_word2vec_balanced_weights
+LSTM_word2vec_balanced_no_weight
 """
 
 
 if __name__ == "__main__":
-    chosen_model = "Bert_full_weights"  # Here is the place to copy chosen model name
+    chosen_model = "LSTM_word2vec_full_no_weights"  # Here is the place to copy chosen model name
     device = "cuda"  # cuda or cpu
     quote = "The men is wise"  # Here is the place for your quote
 
+    max_len_of_sentence = 125
     chosen_model = MODELS_NAME_MAPPING[chosen_model]
     device = torch.device(device)
-    model, tokenizer, nn = load_model_tokenizer(chosen_model)
-    encoded_output = encode_quote(quote, model, tokenizer, device, max_length=125)
-    output = predict(encoded_output, nn)
+    if chosen_model[0] == "Bert" or chosen_model[0] == "Roberta" or chosen_model[0] == "Electra":
+        model, tokenizer, nn = load_model_tokenizer(chosen_model)
+        encoded_output = encode_quote(quote, model, tokenizer, device, max_length=max_len_of_sentence)
+        output = predict(encoded_output, nn)
+    else:
+        quote = word_tokenize(quote.lower())
+        if chosen_model[1] == "glove":
+            endoded_input = prepare_glove(quote, chosen_model[0], max_len_of_sentence, device)
+        else:
+            endoded_input = prepare_word2vec(quote, chosen_model[0], max_len_of_sentence, device)
+        model = torch.load(f"train_models/{chosen_model[2]}")
+        if chosen_model[0] == "LSTM":
+            output = model(endoded_input)
+            output = output[0][len(quote)-1]
+        else:
+            output = model(endoded_input)
+            output = output[0]
     probabilities = get_prediction_probabilities(output)
 
     for label, probability in zip(CLASS_LABELS, probabilities):
