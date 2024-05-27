@@ -100,7 +100,7 @@ def get_data_word2vec_CNN(batch, words:list, labels:list,):
     model = Word2Vec.load('word2vec/word2vec_100d')
     word2vec_embeddings = []
     for sentence in words:
-        sentence = word_tokenize(sentence)
+        sentence = word_tokenize(sentence.lower())
         emb_sentence = np.empty((100,0))
         for i in range(max_len_of_sentence):
             if i < len(sentence):
@@ -117,7 +117,7 @@ def get_data_word2vec_LSTM(batch, words:list, labels:list,):
     model = Word2Vec.load('word2vec/word2vec_100d')
     word2vec_embeddings = []
     for sentence in words:
-        sentence = word_tokenize(sentence)
+        sentence = word_tokenize(sentence.lower())
         emb_sentence = np.empty((100,0))
         for word in sentence:
             emb_sentence = np.hstack((emb_sentence, np.reshape(model.wv[word], (100, 1))))
@@ -132,7 +132,7 @@ def get_data_glove_CNN(batch, words:list, labels:list,):
     glove = torchtext.vocab.GloVe(name="6B", dim=100)
     glove_embeddings = []
     for sentence in words:
-        sentence = word_tokenize(sentence)
+        sentence = word_tokenize(sentence.lower())
         emb_sentence = torch.empty((100,0),dtype=torch.double)
         for i in range(max_len_of_sentence):
             if i < len(sentence):
@@ -149,7 +149,7 @@ def get_data_glove_LSTM(batch, words:list, labels:list,):
     glove = torchtext.vocab.GloVe(name="6B", dim=100)
     glove_embeddings = []
     for sentence in words:
-        sentence = word_tokenize(sentence)
+        sentence = word_tokenize(sentence.lower())
         emb_sentence = torch.empty((100,0))
         for word in sentence:
             emb_sentence = torch.hstack((emb_sentence, torch.reshape(glove[word], (100, 1))))
