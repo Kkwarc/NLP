@@ -1,7 +1,11 @@
 from transformers import BertModel, ElectraModel, RobertaModel
 from transformers import BertTokenizer, ElectraTokenizer, RobertaTokenizer
 import torch
+import torch.nn.functional as F
+from get_embedded_data import MAPPING
 
+
+CLASS_LABELS = MAPPING.keys()
 
 MODELS_NAME_MAPPING = {
     "Bert_full_weights": ("Bert", "bert_[]_[1, 1, 2, 3, 1.33, 1.33, 5, 1, 2.5].pt"),
@@ -47,9 +51,14 @@ def encode_quote(sentence, model, tokenizer, device, max_length=125):
 
 
 def predict(encoded_output, network):
-    input = torch.flatten(encoded_output.double(), 1)
+    input = torch.flatten(encoded_output.double(), 0)
     outputs = network(input)
     return outputs
+
+
+def get_prediction_probabilities(outputs):
+    probabilities = F.softmax(outputs, dim=0)
+    return probabilities
 
 
 """
@@ -79,4 +88,7 @@ if __name__ == "__main__":
     model, tokenizer, nn = load_model_tokenizer(chosen_model)
     encoded_output = encode_quote(quote, model, tokenizer, device, max_length=125)
     output = predict(encoded_output, nn)
-    print(f'Predicted class: {output}')
+    probabilities = get_prediction_probabilities(output)
+
+    for label, probability in zip(CLASS_LABELS, probabilities):
+        print(f'Class: {label}, Probability: {probability.item():.2f}')
