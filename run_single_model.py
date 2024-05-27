@@ -81,6 +81,7 @@ def get_prediction_probabilities(outputs):
     probabilities = F.softmax(outputs, dim=0)
     return probabilities
 
+
 def prepare_glove(quote, model, max_len_of_sentence, device):
     glove = torchtext.vocab.GloVe(name="6B", dim=100)
     emb_sentence = torch.empty((100,0),dtype=torch.double)
@@ -95,7 +96,8 @@ def prepare_glove(quote, model, max_len_of_sentence, device):
             else:
                 emb_sentence = torch.hstack((emb_sentence, torch.zeros((100,1))))
         return emb_sentence.unsqueeze(0).to(device)
-    
+
+
 def prepare_word2vec(quote, model, max_len_of_sentence, device):
     tok = Word2Vec.load('word2vec/word2vec_100d')
     emb_sentence = np.empty((100,0))
@@ -110,6 +112,35 @@ def prepare_word2vec(quote, model, max_len_of_sentence, device):
             else:
                 emb_sentence = np.hstack((emb_sentence, np.zeros((100,1))))
         return torch.from_numpy(emb_sentence).unsqueeze(0).to(device)
+
+
+def main(chosen_model, device, quote):
+    max_len_of_sentence = 125
+    chosen_model = MODELS_NAME_MAPPING[chosen_model]
+    device = torch.device(device)
+    if chosen_model[0] == "Bert" or chosen_model[0] == "Roberta" or chosen_model[0] == "Electra":
+        model, tokenizer, nn = load_model_tokenizer(chosen_model)
+        encoded_output = encode_quote(quote, model, tokenizer, device, max_length=max_len_of_sentence)
+        output = predict(encoded_output, nn)
+    else:
+        quote = word_tokenize(quote.lower())
+        if chosen_model[1] == "glove":
+            endoded_input = prepare_glove(quote, chosen_model[0], max_len_of_sentence, device)
+        else:
+            endoded_input = prepare_word2vec(quote, chosen_model[0], max_len_of_sentence, device)
+        model = torch.load(f"train_models/{chosen_model[2]}")
+        if chosen_model[0] == "LSTM":
+            output = model(endoded_input)
+            output = output[0][len(quote) - 1]
+        else:
+            output = model(endoded_input)
+            output = output[0]
+    probabilities = get_prediction_probabilities(output)
+
+    for label, probability in zip(CLASS_LABELS, probabilities):
+        print(f'Class: {label}, Probability: {probability.item():.2f}')
+    return probabilities
+
 
 """
 Models names:
@@ -149,27 +180,4 @@ if __name__ == "__main__":
     device = "cuda"  # cuda or cpu
     quote = "The men is wise"  # Here is the place for your quote
 
-    max_len_of_sentence = 125
-    chosen_model = MODELS_NAME_MAPPING[chosen_model]
-    device = torch.device(device)
-    if chosen_model[0] == "Bert" or chosen_model[0] == "Roberta" or chosen_model[0] == "Electra":
-        model, tokenizer, nn = load_model_tokenizer(chosen_model)
-        encoded_output = encode_quote(quote, model, tokenizer, device, max_length=max_len_of_sentence)
-        output = predict(encoded_output, nn)
-    else:
-        quote = word_tokenize(quote.lower())
-        if chosen_model[1] == "glove":
-            endoded_input = prepare_glove(quote, chosen_model[0], max_len_of_sentence, device)
-        else:
-            endoded_input = prepare_word2vec(quote, chosen_model[0], max_len_of_sentence, device)
-        model = torch.load(f"train_models/{chosen_model[2]}")
-        if chosen_model[0] == "LSTM":
-            output = model(endoded_input)
-            output = output[0][len(quote)-1]
-        else:
-            output = model(endoded_input)
-            output = output[0]
-    probabilities = get_prediction_probabilities(output)
-
-    for label, probability in zip(CLASS_LABELS, probabilities):
-        print(f'Class: {label}, Probability: {probability.item():.2f}')
+    main(chosen_model, device, quote)
