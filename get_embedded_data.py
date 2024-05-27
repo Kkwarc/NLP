@@ -66,36 +66,7 @@ def split_data(df, labels_column_name, values_column_name, test_size=0.2, separa
     return X_train, X_test, y_train, y_test
 
 
-# def get_sentences_transformers():
-#     with open('data_set.csv', 'r', encoding='utf-8') as dh:
-#         list_of_words = []
-#         list_of_targets = []
-#         for i, line in enumerate(dh):
-#             if i > 0:
-#                 line = line.strip()
-#                 line = line.split('@')
-#                 list_of_words.append(line[-1].lower())
-#                 list_of_targets.append(MAPPING[line[1]])
-#         dh.close()
-#     return list_of_words, list_of_targets
-
-
-# def get_sentences():
-#     with open('data_set.csv', 'r', encoding='utf-8') as dh:
-#         list_of_words = []
-#         list_of_targets = []
-#         for i, line in enumerate(dh):
-#             if i > 0:
-#                 line = line.strip()
-#                 line = line.split('@')
-#                 line[-1] = word_tokenize(line[-1].lower())
-#                 list_of_words.append(line[-1])
-#                 list_of_targets.append(MAPPING[line[1]])
-#         dh.close()
-#     return list_of_words, list_of_targets
-
-
-def get_data_word2vec_CNN(batch, words:list, labels:list,):
+def get_data_word2vec_CNN(batch, words: list, labels: list):
     max_len_of_sentence = 125
     model = Word2Vec.load('word2vec/word2vec_100d')
     word2vec_embeddings = []
@@ -113,7 +84,7 @@ def get_data_word2vec_CNN(batch, words:list, labels:list,):
     return dataloader
 
 
-def get_data_word2vec_LSTM(batch, words:list, labels:list,):
+def get_data_word2vec_LSTM(batch, words: list, labels: list):
     model = Word2Vec.load('word2vec/word2vec_100d')
     word2vec_embeddings = []
     for sentence in words:
@@ -127,7 +98,7 @@ def get_data_word2vec_LSTM(batch, words:list, labels:list,):
     return dataloader
 
 
-def get_data_glove_CNN(batch, words:list, labels:list,):
+def get_data_glove_CNN(batch, words: list, labels: list):
     max_len_of_sentence = 125
     glove = torchtext.vocab.GloVe(name="6B", dim=100)
     glove_embeddings = []
@@ -145,7 +116,7 @@ def get_data_glove_CNN(batch, words:list, labels:list,):
     return dataloader
 
 
-def get_data_glove_LSTM(batch, words:list, labels:list,):
+def get_data_glove_LSTM(batch, words: list, labels: list):
     glove = torchtext.vocab.GloVe(name="6B", dim=100)
     glove_embeddings = []
     for sentence in words:
@@ -159,7 +130,7 @@ def get_data_glove_LSTM(batch, words:list, labels:list,):
     return dataloader
 
 
-def get_data_tokenizer_MLP(batch, words:list, labels:list, device, tokenizer, model):
+def get_data_tokenizer_MLP(batch, words: list, labels: list, device, tokenizer, model):
     model = model.to(device)
     max_len_of_sentence = 125
     bert_embeddings = []
