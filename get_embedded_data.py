@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 
 
 MAPPING = {
-    "aristotle" : 0,
+    "aristotle": 0,
     "schopenhauer": 1,
     "nietzsche": 2,
     "hegel": 3,

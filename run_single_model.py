@@ -176,7 +176,7 @@ LSTM_word2vec_balanced_no_weight
 
 
 if __name__ == "__main__":
-    chosen_model = "LSTM_word2vec_full_no_weights"  # Here is the place to copy chosen model name
+    chosen_model = "Electra_balanced_no_weights"  # Here is the place to copy chosen model name
     device = "cuda"  # cuda or cpu
     quote = "The men is wise"  # Here is the place for your quote
 
